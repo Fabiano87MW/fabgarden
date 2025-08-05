@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FABGarden - Il Tuo Giardino Intelligente</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">🌱</div>
+                    <h1>FABGarden</h1>
+                    <p class="tagline">Il Tuo Giardino Intelligente</p>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" data-tab="dashboard">🏠 Dashboard</button>
+                    <button class="nav-tab" data-tab="catalog">📚 Catalogo</button>
+                    <button class="nav-tab" data-tab="plants">🌱 Le Mie Piante</button>
+                    <button class="nav-tab" data-tab="calendar">📅 Calendario</button>
+                    <button class="nav-tab" data-tab="photos">📷 Foto AI</button>
+                    <button class="nav-tab" data-tab="weather">🌤️ Meteo</button>
+                    <button class="nav-tab" data-tab="recipes">🍅 Ricette</button>
+                    <button class="nav-tab" data-tab="settings">⚙️ Impostazioni</button>
+                </nav>
+                <div class="header-actions">
+                    <button class="btn btn--primary" id="quickAddBtn">+ Aggiungi Veloce</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-content active">
+                <div class="dashboard-header">
+                    <h2>🌿 Benvenuto nel tuo giardino</h2>
+                    <p class="dashboard-subtitle">Bergamo - Martedì, 5 Agosto 2025</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>📊 Statistiche</h3>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalPlants">0</span>
+                                <span class="stat-label">Piante Totali</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="activeActivities">0</span>
+                                <span class="stat-label">Attività Oggi</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h3>☀️ Meteo Oggi</h3>
+                        <div class="weather-info">
+                            <div class="weather-temp">24°C</div>
+                            <div class="weather-desc">Soleggiato</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h3>📋 Attività del Giorno</h3>
+                        <div id="todayActivities">
+                            <p>Nessuna attività programmata</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Catalog Tab -->
+            <section id="catalog" class="tab-content">
+                <div class="catalog-header">
+                    <h2>📚 Catalogo Piante</h2>
+                    
+                    <!-- AI Search Section -->
+                    <div class="ai-search-section">
+                        <h3>🤖 Aggiungi Pianta con AI</h3>
+                        <div class="ai-search-form">
+                            <input type="text" id="aiSearchInput" placeholder="Es: Rucola selvatica, Basilico thai..." />
+                            <button id="aiSearchBtn" class="btn btn--primary">🔍 Cerca con AI</button>
+                        </div>
+                        <p id="aiSearchFeedback" class="ai-feedback"></p>
+                    </div>
+                </div>
+                
+                <!-- Plant Categories -->
+                <div class="catalog-categories">
+                    <div class="category-section">
+                        <h3>🥕 Ortaggi</h3>
+                        <div id="catalogList" class="plant-grid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Plants Tab -->
+            <section id="plants" class="tab-content">
+                <div class="plants-header">
+                    <h2>🌱 Le Mie Piante</h2>
+                    <button class="btn btn--secondary" id="addPlantBtn">+ Aggiungi Pianta</button>
+                </div>
+                <div id="myPlantsList" class="plants-grid"></div>
+            </section>
+
+            <!-- Calendar Tab -->
+            <section id="calendar" class="tab-content">
+                <h2>📅 Calendario Semine</h2>
+                <div class="calendar-info">
+                    <p>Calendario ottimizzato per la zona di Bergamo</p>
+                </div>
+            </section>
+
+            <!-- Photos Tab -->
+            <section id="photos" class="tab-content">
+                <h2>📷 Foto e Analisi AI</h2>
+                <div class="photo-upload">
+                    <input type="file" id="photoInput" accept="image/*" />
+                    <button class="btn btn--primary" id="uploadPhotoBtn">📸 Carica Foto</button>
+                </div>
+                <div id="photoGallery" class="photo-gallery"></div>
+            </section>
+
+            <!-- Weather Tab -->
+            <section id="weather" class="tab-content">
+                <h2>🌤️ Meteo Bergamo</h2>
+                <div class="weather-details">
+                    <p>Previsioni per i prossimi giorni</p>
+                </div>
+            </section>
+
+            <!-- Recipes Tab -->
+            <section id="recipes" class="tab-content">
+                <h2>🍅 Ricette e Conservazione</h2>
+                <div class="recipes-list">
+                    <p>Ricette stagionali basate sui tuoi raccolti</p>
+                </div>
+            </section>
+
+            <!-- Settings Tab -->
+            <section id="settings" class="tab-content">
+                <div class="settings-header">
+                    <h2>⚙️ Impostazioni</h2>
+                </div>
+                
+                <div class="settings-sections">
+                    <div class="settings-card">
+                        <h3>🏡 Gestione Zone</h3>
+                        <div id="zonesList">
+                            <div class="zone-item">🌱 Orto Principale</div>
+                            <div class="zone-item">🌸 Giardino</div>
+                            <div class="zone-item">🏠 Serra</div>
+                            <div class="zone-item">🏠 Balcone</div>
+                        </div>
+                        <button class="btn btn--secondary" id="addZoneBtn">+ Aggiungi Zona</button>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>📍 Località</h3>
+                        <input type="text" id="locationInput" value="Bergamo" />
+                        <button class="btn btn--secondary" id="saveLocationBtn">Salva</button>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>🔔 Notifiche</h3>
+                        <label>
+                            <input type="checkbox" id="notificationsEnabled" checked />
+                            Abilita notifiche
+                        </label>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>🗑️ Reset Dati</h3>
+                        <button class="btn btn--danger" id="resetDataBtn">Reset Completo</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
