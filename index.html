@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FABGarden - Il Tuo Giardino Intelligente</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">🌱</div>
+                    <h1>FABGarden</h1>
+                    <p class="tagline">Il Tuo Giardino Intelligente</p>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" data-tab="dashboard">🏠 Dashboard</button>
+                    <button class="nav-tab" data-tab="catalog">📚 Catalogo</button>
+                    <button class="nav-tab" data-tab="plants">🌱 Le Mie Piante</button>
+                    <button class="nav-tab" data-tab="calendar">📅 Calendario</button>
+                    <button class="nav-tab" data-tab="photos">📷 Foto AI</button>
+                    <button class="nav-tab" data-tab="weather">🌤️ Meteo</button>
+                    <button class="nav-tab" data-tab="recipes">🍅 Ricette</button>
+                </nav>
+                <div class="header-actions">
+                    <button class="btn btn--primary" id="quickAddBtn">+ Aggiungi Veloce</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-header">
+                    <h2>🌿 Benvenuto nel tuo giardino</h2>
+                    <p class="dashboard-subtitle">Bergamo - Martedì, 5 Agosto 2025</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card stats-overview">
+                        <div class="card-header">
+                            <h3>📊 Panoramica</h3>
+                            <div class="card-icon">🌱</div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalPlants">0</span>
+                                <span class="stat-label">Piante Totali</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="wishlistCount">0</span>
+                                <span class="stat-label">Lista Desideri</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="needWater">0</span>
+                                <span class="stat-label">Da Innaffiare</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="todayTasks">0</span>
+                                <span class="stat-label">Attività Oggi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card weather-widget">
+                        <div class="card-header">
+                            <h3>🌤️ Meteo Bergamo</h3>
+                            <div class="weather-alert" id="weatherAlert"></div>
+                        </div>
+                        <div class="weather-display" id="weatherDisplay">
+                            <div class="weather-main">
+                                <div class="weather-icon">☀️</div>
+                                <div class="weather-temp">22°C</div>
+                            </div>
+                            <div class="weather-details">
+                                <div class="weather-item">
+                                    <span class="weather-label">Condizioni</span>
+                                    <span class="weather-value">Soleggiato</span>
+                                </div>
+                                <div class="weather-item">
+                                    <span class="weather-label">Umidità</span>
+                                    <span class="weather-value">65%</span>
+                                </div>
+                                <div class="weather-item">
+                                    <span class="weather-label">Vento</span>
+                                    <span class="weather-value">8 km/h</span>
+                                </div>
+                                <div class="weather-suggestion" id="weatherSuggestion">
+                                    🌱 Perfetto per piantare e innaffiare!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card activity-timeline">
+                        <div class="card-header">
+                            <h3>⏰ Oggi nel Giardino</h3>
+                            <button class="btn btn--sm btn--secondary" onclick="fabGarden.switchTab('calendar')">Vedi Tutto</button>
+                        </div>
+                        <div class="timeline-list" id="todayTimeline">
+                            <!-- Timeline items will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card quick-actions">
+                        <div class="card-header">
+                            <h3>⚡ Azioni Rapide</h3>
+                        </div>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action-btn" onclick="fabGarden.quickWaterAll()">
+                                <div class="action-icon">💧</div>
+                                <div class="action-text">Innaffia Tutto</div>
+                            </button>
+                            <button class="quick-action-btn" onclick="fabGarden.switchTab('photos')">
+                                <div class="action-icon">📷</div>
+                                <div class="action-text">Analizza Foto</div>
+                            </button>
+                            <button class="quick-action-btn" onclick="fabGarden.switchTab('catalog')">
+                                <div class="action-icon">🌱</div>
+                                <div class="action-text">Nuova Pianta</div>
+                            </button>
+                            <button class="quick-action-btn" onclick="fabGarden.switchTab('recipes')">
+                                <div class="action-icon">🍅</div>
+                                <div class="action-text">Ricette</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card charts-section">
+                        <div class="card-header">
+                            <h3>📈 Progresso Settimanale</h3>
+                            <select class="form-control chart-selector" id="chartType">
+                                <option value="activity">Attività</option>
+                                <option value="growth">Crescita</option>
+                                <option value="harvest">Raccolti</option>
+                            </select>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="weeklyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card seasonal-tips">
+                        <div class="card-header">
+                            <h3>💡 Consigli Stagionali</h3>
+                            <div class="season-indicator">🌻 Estate</div>
+                        </div>
+                        <div class="tips-list" id="seasonalTips">
+                            <div class="tip-item">
+                                <span class="tip-icon">☀️</span>
+                                <span class="tip-text">Innaffia nelle ore più fresche per evitare shock termici</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-icon">🍅</span>
+                                <span class="tip-text">È il momento perfetto per raccogliere pomodori e peperoni</span>
+                            </div>
+                            <div class="tip-item">
+                                <span class="tip-icon">🌱</span>
+                                <span class="tip-text">Pianta basilico e rucola per raccolti continui</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Catalog Tab -->
+            <div class="tab-content" id="catalog">
+                <div class="catalog-header">
+                    <h2>📚 Catalogo Completo - 200+ Varietà</h2>
+                    <div class="catalog-search">
+                        <input type="text" class="form-control search-input" id="catalogSearch" placeholder="🔍 Cerca tra le varietà...">
+                        <select class="form-control category-filter" id="catalogCategoryFilter">
+                            <option value="">Tutte le categorie</option>
+                            <option value="ortaggi">🥕 Ortaggi</option>
+                            <option value="frutta">🍎 Frutta</option>
+                            <option value="erbe">🌿 Erbe & Prato</option>
+                            <option value="fiori">🌸 Fiori</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="catalog-categories" id="catalogContainer">
+                    <!-- Categories will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Plants Tab -->
+            <div class="tab-content" id="plants">
+                <div class="plants-header">
+                    <h2>🌱 Le Mie Piante</h2>
+                    <div class="plants-controls">
+                        <div class="view-toggle">
+                            <button class="btn btn--sm btn--secondary active" data-view="grid">🔳 Griglia</button>
+                            <button class="btn btn--sm btn--secondary" data-view="list">📋 Lista</button>
+                        </div>
+                        <select class="form-control" id="plantsFilter">
+                            <option value="">Tutte</option>
+                            <option value="wishlist">💝 Lista Desideri</option>
+                            <option value="planted">🌱 Piantate</option>
+                            <option value="growing">🌿 In Crescita</option>
+                            <option value="ready">🎯 Pronte</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="plants-sections">
+                    <div class="plants-section">
+                        <h3>💝 Lista Desideri</h3>
+                        <div class="plants-grid" id="wishlistGrid">
+                            <!-- Wishlist plants will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="plants-section">
+                        <h3>🌱 Piante Attive</h3>
+                        <div class="plants-grid" id="activePlantsGrid">
+                            <!-- Active plants will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Tab -->
+            <div class="tab-content" id="calendar">
+                <div class="calendar-header">
+                    <h2>📅 Calendario Intelligente</h2>
+                    <div class="calendar-controls">
+                        <button class="btn btn--sm btn--secondary" id="prevMonth">◀</button>
+                        <span class="current-month" id="currentMonth">Agosto 2025</span>
+                        <button class="btn btn--sm btn--secondary" id="nextMonth">▶</button>
+                        <div class="calendar-legend">
+                            <span class="legend-item"><span class="legend-color" style="background: var(--fab-primary-green);"></span> Semina</span>
+                            <span class="legend-item"><span class="legend-color" style="background: var(--fab-primary-yellow);"></span> Raccolta</span>
+                            <span class="legend-item"><span class="legend-color" style="background: var(--fab-accent-orange);"></span> Cura</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be populated by JS -->
+                    </div>
+                    
+                    <div class="lunar-phase">
+                        <h4>🌙 Fase Lunare</h4>
+                        <div class="moon-info" id="moonInfo">
+                            <div class="moon-phase">🌕</div>
+                            <div class="moon-text">Luna Piena - Ideale per raccogliere</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upcoming-activities">
+                    <h3>📋 Prossime Attività</h3>
+                    <div class="activities-list" id="upcomingActivitiesList">
+                        <!-- Upcoming activities will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photos Tab -->
+            <div class="tab-content" id="photos">
+                <div class="photos-header">
+                    <h2>📷 Analisi Foto AI</h2>
+                    <p class="photos-subtitle">Carica foto delle tue piante per ricevere analisi intelligenti e suggerimenti personalizzati</p>
+                </div>
+
+                <div class="photo-upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                        <div class="upload-content">
+                            <div class="upload-icon">📷</div>
+                            <h3>Carica Foto della Pianta</h3>
+                            <p>Trascina qui le foto o clicca per selezionare</p>
+                            <button class="btn btn--primary" onclick="document.getElementById('photoUpload').click()">
+                                🖼️ Scegli File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="photo-analysis" id="photoAnalysis" style="display: none;">
+                    <div class="analysis-container">
+                        <div class="uploaded-photos">
+                            <h3>📸 Foto Caricate</h3>
+                            <div class="photos-preview" id="photosPreview"></div>
+                        </div>
+                        <div class="ai-analysis">
+                            <h3>🤖 Analisi AI</h3>
+                            <div class="analysis-results" id="analysisResults">
+                                <div class="analysis-loading">
+                                    <div class="loading-spinner">⏳</div>
+                                    <p>Analisi in corso...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="photo-history">
+                    <h3>📚 Cronologia Analisi</h3>
+                    <div class="history-filters">
+                        <select class="form-control" id="historyPlantFilter">
+                            <option value="">Tutte le piante</option>
+                        </select>
+                        <select class="form-control" id="historyTimeFilter">
+                            <option value="week">Ultima settimana</option>
+                            <option value="month">Ultimo mese</option>
+                            <option value="all">Tutto</option>
+                        </select>
+                    </div>
+                    <div class="history-grid" id="photoHistoryGrid">
+                        <!-- Photo history will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Tab -->
+            <div class="tab-content" id="weather">
+                <div class="weather-header">
+                    <h2>🌤️ Meteo Bergamo - Previsioni 7 Giorni</h2>
+                </div>
+
+                <div class="weather-container">
+                    <div class="current-weather-detailed">
+                        <div class="weather-main-info">
+                            <div class="weather-icon-large">☀️</div>
+                            <div class="weather-temp-large">22°C</div>
+                            <div class="weather-desc-large">Soleggiato</div>
+                            <div class="feels-like">Percepita: 24°C</div>
+                        </div>
+                        
+                        <div class="weather-stats-detailed">
+                            <div class="weather-stat">
+                                <div class="stat-icon">💧</div>
+                                <div class="stat-info">
+                                    <span class="stat-value">65%</span>
+                                    <span class="stat-label">Umidità</span>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <div class="stat-icon">💨</div>
+                                <div class="stat-info">
+                                    <span class="stat-value">8 km/h</span>
+                                    <span class="stat-label">Vento</span>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <div class="stat-icon">🌡️</div>
+                                <div class="stat-info">
+                                    <span class="stat-value">1015 hPa</span>
+                                    <span class="stat-label">Pressione</span>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <div class="stat-icon">👁️</div>
+                                <div class="stat-info">
+                                    <span class="stat-value">10 km</span>
+                                    <span class="stat-label">Visibilità</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-forecast">
+                        <h3>📅 Previsioni Settimanali</h3>
+                        <div class="forecast-list" id="weeklyForecast">
+                            <!-- Forecast will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="weather-alerts">
+                        <h3>⚠️ Allerte & Suggerimenti</h3>
+                        <div class="alerts-list" id="weatherAlertsList">
+                            <!-- Weather alerts will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipes Tab -->
+            <div class="tab-content" id="recipes">
+                <div class="recipes-header">
+                    <h2>🍅 Ricette dal Giardino</h2>
+                    <div class="recipes-search">
+                        <input type="text" class="form-control search-input" id="recipeSearch" placeholder="🔍 Cerca ricette...">
+                        <select class="form-control" id="recipeCategory">
+                            <option value="">Tutte le categorie</option>
+                            <option value="conserve">🏺 Conserve</option>
+                            <option value="insalate">🥗 Insalate</option>
+                            <option value="primi">🍝 Primi Piatti</option>
+                            <option value="secondi">🍖 Secondi</option>
+                            <option value="tisane">🍵 Tisane</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="seasonal-recipes">
+                    <h3>🌻 Ricette di Stagione - Estate</h3>
+                    <div class="recipes-seasonal-grid" id="seasonalRecipes">
+                        <!-- Seasonal recipes will be populated by JS -->
+                    </div>
+                </div>
+
+                <div class="all-recipes">
+                    <h3>📖 Tutte le Ricette</h3>
+                    <div class="recipes-grid" id="allRecipesGrid">
+                        <!-- All recipes will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modals -->
+        <div class="modal hidden" id="addPlantModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🌱 Aggiungi Pianta</h3>
+                    <button class="modal-close" onclick="fabGarden.closeModal('addPlantModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPlantForm">
+                        <div class="form-group">
+                            <label class="form-label">Nome/Varietà</label>
+                            <input type="text" class="form-control" id="plantName" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Categoria</label>
+                            <input type="text" class="form-control" id="plantCategory" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stato</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="plantStatus" value="wishlist" checked>
+                                    <span>🌱 Voglio coltivarla (Lista Desideri)</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="plantStatus" value="planted">
+                                    <span>🌿 L'ho già piantata</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group planted-fields hidden">
+                            <label class="form-label">Data Semina/Trapianto</label>
+                            <input type="date" class="form-control" id="plantDate">
+                        </div>
+                        <div class="form-group planted-fields hidden">
+                            <label class="form-label">Posizione</label>
+                            <select class="form-control" id="plantLocation">
+                                <option value="orto">🥕 Orto</option>
+                                <option value="giardino">🌿 Giardino</option>
+                                <option value="balcone">🏠 Balcone</option>
+                                <option value="serra">🏠 Serra</option>
+                                <option value="vaso">🪴 Vaso</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Note</label>
+                            <textarea class="form-control" id="plantNotes" rows="3" placeholder="Aggiungi note personali..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--secondary" onclick="fabGarden.closeModal('addPlantModal')">Annulla</button>
+                    <button class="btn btn--primary" onclick="fabGarden.savePlant()">💾 Salva</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal hidden" id="plantDetailModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3 id="plantDetailTitle">🌱 Dettagli Pianta</h3>
+                    <button class="modal-close" onclick="fabGarden.closeModal('plantDetailModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="plant-detail-content" id="plantDetailContent">
+                        <!-- Plant details will be populated by JS -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--secondary" onclick="fabGarden.closeModal('plantDetailModal')">Chiudi</button>
+                    <button class="btn btn--primary" id="plantDetailActionBtn">Aggiungi</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal hidden" id="photoDetailModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>📷 Dettagli Analisi</h3>
+                    <button class="modal-close" onclick="fabGarden.closeModal('photoDetailModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="photo-detail-content" id="photoDetailContent">
+                        <!-- Photo details will be populated by JS -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--secondary" onclick="fabGarden.closeModal('photoDetailModal')">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
